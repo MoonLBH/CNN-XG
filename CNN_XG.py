@@ -153,7 +153,7 @@ def build_model():
     merged = concatenate([seq_out, epi_out], axis=-1)
 
     pretrain_model = Model(inputs=[seq_input, epi_input], outputs=[merged])
-    pretrain_model.load_weights("weights2/50_0.2/weight_best_loss0.04.h5", by_name=True)
+    pretrain_model.load_weights("weights/weights.h5", by_name=True)
 
     prediction =Dense(1, activation='sigmoid', name='prediction')(merged)
     model = Model([seq_input, epi_input], prediction)
