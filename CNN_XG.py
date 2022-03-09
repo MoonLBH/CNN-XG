@@ -159,32 +159,31 @@ def build_model():
     model = Model([seq_input, epi_input], prediction)
     return merged,model
 
+if __name__ == '__main__':
+    train_path = "data/HL60.csv"
+    seq_train,  epi_train, y_train = load_data(train_path)
 
-train_path = "data/HL60.csv"
-seq_train,  epi_train, y_train = load_data(train_path)
+    merged, model = build_model()
+    new_model = Model(model.inputs, outputs=[merged])
+    x_train = new_model.predict([seq_train, epi_train])
+    # x_train, x_test, y_train, y_test = train_test_split(x_train, y_train0, test_size=0.2)
+    selected_cnn_fea_cols = [0, 2, 4, 5, 8, 13, 14, 15, 21, 22, 24, 26, 29, 30, 32]
+    x_train = x_train[:, selected_cnn_fea_cols]
 
-merged, model = build_model()
-new_model = Model(model.inputs, outputs=[merged])
-x_train = new_model.predict([seq_train, epi_train])
-# x_train, x_test, y_train, y_test = train_test_split(x_train, y_train0, test_size=0.2)
-selected_cnn_fea_cols = [0, 2, 4, 5, 8, 13, 14, 15, 21, 22, 24, 26, 29, 30, 32]
-x_train = x_train[:, selected_cnn_fea_cols]
-
-xgmodel = XGBRegressor(learning_rate=0.1,
-                           n_estimators=1000,  # 树的个数--1000棵树建立xgboost
-                           max_depth=6,  # 树的深度
-                           min_child_weight=1,  # 叶子节点最小权重
-                           gamma=0.,  # 惩罚项中叶子结点个数前的参数
-                           subsample=0.8,  # 随机选择80%样本建立决策树
-                           colsample_btree=0.8,  # 随机选择80%特征建立决策树
-                           objective='reg:logistic',  # 指定损失函数
-                           scale_pos_weight=1,  # 解决样本个数不平衡的问题
-                           random_state=27  # 随机数
-                           )
-# xgmodel.compile(optimizer='adam', loss='binary_crossentropy', metrics=['auc'])
-xgmodel.fit(x_train, y_train, eval_set=[(x_train, y_train)],
-                eval_metric=['rmse','mae'], early_stopping_rounds=15, verbose=True)
-y_pred = xgmodel.predict(x_train)
-y_test = np.array(y_train).ravel()
-y_test = list(y_test)
+    xgmodel = XGBRegressor(learning_rate=0.1,
+                               n_estimators=1000, 
+                               max_depth=6, 
+                               min_child_weight=1,
+                               gamma=0.,
+                               subsample=0.8,
+                               colsample_btree=0.8,
+                               objective='reg:logistic',
+                               scale_pos_weight=1,
+                               random_state=27)
+    # xgmodel.compile(optimizer='adam', loss='binary_crossentropy', metrics=['auc'])
+    xgmodel.fit(x_train, y_train, eval_set=[(x_train, y_train)],
+                    eval_metric=['rmse','mae'], early_stopping_rounds=15, verbose=True)
+    y_pred = xgmodel.predict(x_train)
+    y_test = np.array(y_train).ravel()
+    y_test = list(y_test)
 
