@@ -9,13 +9,14 @@ CNN-XG is a deep learning-based model for CRISPR/Cas9 sgRNA on-target cleavage e
  * [scikit-learn](https://scikit-learn.org/stable/) 0.23.2
  * [scipy](https://www.scipy.org/) 1.6.2  
  * [Keras](https://keras.io/) 2.4.3    
- * [Tensorflow](https://tensorflow.google.cn/) 2.3.1    
+ * [Tensorflow](https://tensorflow.google.cn/) 2.4.1    
    
   
 
 ## Content
-* **./data:** the training and testing examples with sgRNA sequence and corresponding epigenetic features and label indicating the on-target cleavage efficacy  
-* **./weights/weights.h5:** the well-trained weights for our model    
+* **./data:** the training and testing examples with sgRNA sequence and corresponding epigenetic features and label indicating the on-target cleavage efficacy 
+* **./new_data:** three cell line datasets for generalization capability testing and five SpCas9 variant datasets
+* **./weights/weights.h5:** the well-trained weights for our model in four initial datasets
 * **./CNN-XG.py:** the python code, it can be ran to reproduce our results  
 
 ## Usage
